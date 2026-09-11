@@ -1,0 +1,69 @@
+{
+  "name": "azdospec",
+  "version": "0.1.0",
+  "description": "Remote-first spec-driven development for Azure DevOps. Proposals, requirements and tasks as work items, linked to branches, PRs and people.",
+  "type": "module",
+  "main": "./plugins/opencode.ts",
+  "exports": {
+    ".": "./plugins/opencode.ts",
+    "./plugin": "./plugins/opencode.ts"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "license": "MIT",
+  "author": "Gn0m0-dei",
+  "homepage": "https://github.com/Gn0m0-dei/azdospec",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gn0m0-dei/azdospec.git"
+  },
+  "keywords": [
+    "pi-package",
+    "opencode",
+    "azure-devops",
+    "azure-boards",
+    "spec-driven-development",
+    "agent-skills"
+  ],
+  "files": [
+    "skills",
+    "extensions",
+    "plugins",
+    "commands",
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "prepare": "husky",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "pi": {
+    "extensions": [
+      "./extensions"
+    ],
+    "skills": [
+      "./skills"
+    ]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "peerDependenciesMeta": {
+    "@earendil-works/pi-coding-agent": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.3",
+    "@earendil-works/pi-coding-agent": "^0.85.1",
+    "@opencode-ai/plugin": "^1.18.30",
+    "@types/node": "^22.7.4",
+    "husky": "^9.1.7",
+    "typescript": "^5.6.2",
+    "vitest": "4.1.10"
+  }
+}
