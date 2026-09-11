@@ -16,6 +16,7 @@ const DESCRIPTION = /^description:\s*(.+)$/m;
 // Claude Code resolves this to the installed plugin directory. The other hosts
 // load the skill from their own package root, so the paths that follow it are
 // already correct once the variable is gone.
+// biome-ignore lint/suspicious/noTemplateCurlyInString: Claude Code's placeholder syntax, matched literally
 const PLUGIN_ROOT = '${CLAUDE_PLUGIN_ROOT}/';
 
 const MARKDOWN = '.md';
