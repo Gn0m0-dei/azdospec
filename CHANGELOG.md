@@ -10,6 +10,9 @@ Installed copies are updated with `npx skills update azdospec`.
 
 ### Added
 
-- The model: capabilities as Area Paths, a change as a Feature, requirements as backlog items tagged `ADDED` / `MODIFIED` / `REMOVED`, tasks created only once the item reaches a sprint, and dependencies as `Predecessor / Successor` links.
-- Four commands — `/azdo:init`, `/azdo:propose`, `/azdo:apply`, `/azdo:archive` — and the readiness gate that keeps `apply` from starting on an item that is not Approved or has no iteration.
-- The spec store abstraction (`testplans`, `wiki`, `epic`, `none`), so the living specification lands wherever the organization is actually licensed to keep it.
+- The model: capabilities as Area Paths, a change as a Feature, requirements as backlog items of the project's Requirements category tagged `ADDED` / `MODIFIED` / `REMOVED`, tasks created only once the item reaches a sprint, and dependencies as `Predecessor / Successor` links.
+- Four commands — `/azdo:init`, `/azdo:propose`, `/azdo:apply`, `/azdo:archive` — each with its procedure in `references/`, read on demand.
+- The readiness gate: `/azdo:apply` refuses to start on a requirement that no product owner has approved or that has no iteration, and names the missing condition.
+- The spec store abstraction (`testplans`, `wiki`, `epic`, `none`), detected by `/azdo:init`, so the living specification lands wherever the organization is licensed to keep it.
+- `references/work-items.md`: work item type resolution per process, native field mapping, link type reference names, and the delta tag contract that `/azdo:archive` reads.
+- Documentation for people in `docs/`, separate from the agent-facing procedures.

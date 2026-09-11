@@ -1,0 +1,38 @@
+name: Feature request
+description: Propose a change to the model, a command, or a new spec store
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The mapping to Azure DevOps is deliberate — see [how it maps](https://github.com/Gn0m0-dei/azdospec/blob/main/docs/how-it-maps.md) for the reasoning behind the choices that look arbitrary. Arguing against that reasoning is welcome; it is the fastest way to get a change accepted.
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What you cannot do today, or what the tool makes harder than it should be. Describe the situation, not the solution.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you have in mind
+      description: Optional. If you already have a shape in mind, describe it.
+  - type: textarea
+    id: native
+    attributes:
+      label: Is Azure DevOps already doing this?
+      description: The project prefers native Boards behaviour — link types, policies, rollups, transitions — over reimplementing it. If there is a native feature involved, name it.
+  - type: dropdown
+    id: scope
+    attributes:
+      label: What it touches
+      multiple: true
+      options:
+        - The model (how artifacts map to work items)
+        - A command
+        - A spec store
+        - Documentation
+        - Something else
+    validations:
+      required: true

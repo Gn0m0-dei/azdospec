@@ -1,0 +1,79 @@
+name: Bug report
+description: The skill did something wrong, or refused to do something it should have done
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Behaviour differs across Azure DevOps processes and agents, so the details below are usually what makes a report reproducible.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What the agent did, and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to reproduce
+      description: The command you ran and what you asked for. Paste the relevant part of the exchange if you can.
+    validations:
+      required: true
+  - type: dropdown
+    id: command
+    attributes:
+      label: Command
+      options:
+        - /azdo:init
+        - /azdo:propose
+        - /azdo:apply
+        - /azdo:archive
+        - Other or not command-specific
+    validations:
+      required: true
+  - type: dropdown
+    id: process
+    attributes:
+      label: Project process
+      options:
+        - Agile
+        - Scrum
+        - CMMI
+        - Basic
+        - Inherited or custom
+    validations:
+      required: true
+  - type: dropdown
+    id: spec-store
+    attributes:
+      label: Spec store
+      options:
+        - testplans
+        - wiki
+        - epic
+        - none
+        - Not configured yet
+    validations:
+      required: true
+  - type: input
+    id: agent
+    attributes:
+      label: Agent and version
+      placeholder: Claude Code 2.1.4, opencode, pi…
+    validations:
+      required: true
+  - type: input
+    id: skill-version
+    attributes:
+      label: Skill version
+      description: The `metadata.version` in SKILL.md.
+    validations:
+      required: true
+  - type: checkboxes
+    id: no-secrets
+    attributes:
+      label: Before submitting
+      options:
+        - label: I removed organization names, work item content and anything else I should not post publicly.
+          required: true
