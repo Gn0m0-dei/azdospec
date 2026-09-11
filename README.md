@@ -1,9 +1,25 @@
-# AzDOSpec
+<p align="center">
+  <a href="https://github.com/Gn0m0-dei/azdospec">
+    <img src="assets/banner.png" alt="AzDOSpec — remote-first spec-driven development for Azure DevOps" width="100%">
+  </a>
+</p>
 
-> **Your backlog is the spec.**
->
-> Remote-first spec-driven development for Azure DevOps — proposals, requirements
-> and tasks as work items, linked to branches, PRs and people.
+<p align="center">
+  <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue?style=flat-square&logo=opensourceinitiative&logoColor=white" /></a>
+  <a href="https://www.skills.sh"><img alt="Agent Skills" src="https://img.shields.io/badge/Agent_Skills-compatible-4b3baf?style=flat-square" /></a>
+  <a href="#claude-code--as-a-plugin"><img alt="Claude Code: plugin" src="https://img.shields.io/badge/Claude_Code-plugin-d97757?style=flat-square&logo=claude&logoColor=white" /></a>
+  <a href="#opencode"><img alt="opencode: commands" src="https://img.shields.io/badge/opencode-commands-000000?style=flat-square&logo=opencode&logoColor=white" /></a>
+  <a href="#any-agent-skills-host"><img alt="pi: skill" src="https://img.shields.io/badge/pi-skill-6e56cf?style=flat-square" /></a>
+  <a href="https://learn.microsoft.com/azure/devops/mcp-server/mcp-server-overview"><img alt="Azure DevOps MCP" src="https://img.shields.io/badge/Azure_DevOps-MCP-0078D7?style=flat-square" /></a>
+  <a href="./CHANGELOG.md"><img alt="Status" src="https://img.shields.io/badge/status-design_phase-orange?style=flat-square" /></a>
+  <a href="https://github.com/Gn0m0-dei/azdospec/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/Gn0m0-dei/azdospec?style=flat-square&label=Stars" /></a>
+</p>
+
+<h1 align="center">AzDOSpec</h1>
+
+<p align="center">
+  <strong>Your backlog is the spec.</strong>
+</p>
 
 > **Status: design phase.** The model is settled and the commands are written.
 > Not yet exercised against enough real projects to call it stable.
@@ -93,9 +109,25 @@ there is no token to create or store.
 ### opencode
 
 Copy `.opencode/command/` into your project or `~/.config/opencode/`, which
-registers `/azdo-init`, `/azdo-propose`, `/azdo-apply` and `/azdo-archive`. Then
-install the skill as below, and configure the Azure DevOps MCP server in your
-opencode config.
+registers `/azdo-init`, `/azdo-propose`, `/azdo-apply` and `/azdo-archive`, and
+install the skill as below.
+
+opencode does not let an installed package write your configuration, so declare
+the MCP server yourself in `opencode.json`:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "azure-devops": {
+      "type": "remote",
+      "url": "https://mcp.dev.azure.com/<your-organization>"
+    }
+  }
+}
+```
+
+That is the only manual step compared to the Claude Code plugin.
 
 ### Any Agent Skills host
 
@@ -109,7 +141,15 @@ into the skills directory your agent reads — `~/.claude/skills/azdospec/`,
 project-local equivalent. Most agents also read `.agents/skills/`.
 
 Installed this way there are no slash commands: ask for what you want and the
-skill activates by description. The MCP server has to be configured separately.
+skill activates by description, and the MCP server is configured however your
+agent documents it. On pi, `.agents/plugins/marketplace.json` in this repository
+is the install entry.
+
+| Host | Commands | MCP configured for you |
+|---|---|---|
+| Claude Code | `/azdo:init`, `propose`, `apply`, `archive` | Yes, on install |
+| opencode | `/azdo-init`, `azdo-propose`, `azdo-apply`, `azdo-archive` | No — three lines in `opencode.json` |
+| pi and other Agent Skills hosts | None; the skill activates by description | No |
 
 ## Documentation
 
