@@ -1,0 +1,13 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Azure DevOps",
+      "description": "Skills for planning and managing work in Azure DevOps.",
+      "skills": [
+        "azdospec"
+      ]
+    }
+  ]
+}
