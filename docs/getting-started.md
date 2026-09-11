@@ -4,8 +4,8 @@
 
 You need three things:
 
-1. An agent that supports [Agent Skills](https://www.skills.sh) — Claude Code, opencode, pi, and others.
-2. The official [Azure DevOps MCP Server](https://learn.microsoft.com/azure/devops/mcp-server/mcp-server-overview) (`@azure-devops/mcp`) connected to that agent, authenticated as an identity that can create work items in your project.
+1. An agent that supports [Agent Skills](https://www.skills.sh) or Claude Code plugins — Claude Code, opencode, pi, and others.
+2. A connection to the [Azure DevOps MCP Server](https://learn.microsoft.com/azure/devops/mcp-server/mcp-server-overview), as an identity that can create work items in your project.
 3. A repository whose remote is an Azure DevOps repository.
 
 Everything AzDOSpec produces is a work item, so there is no offline or draft-only
@@ -13,12 +13,27 @@ mode. If the integration is missing, the skill says so and stops.
 
 ## Install
 
+On Claude Code, install it as a plugin and the second requirement is handled for
+you:
+
+```
+/plugin marketplace add Gn0m0-dei/azdospec
+/plugin install azdo
+```
+
+You are asked for your Azure DevOps organization name on install — the
+organization alone, not the URL. The plugin connects to the remote MCP server
+using your existing Azure identity, so there is no token to create, paste or
+rotate.
+
+On other hosts, install the skill and configure the MCP server yourself:
+
 ```bash
 npx skills add Gn0m0-dei/azdospec
 ```
 
-Or copy `skills/azdospec/` into the skills directory your agent reads — see the
-[README](../README.md#install) for the path per agent.
+See the [README](../README.md#install) for the per-host paths and for opencode's
+command files.
 
 ## Set up the repository
 

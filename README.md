@@ -72,34 +72,44 @@ See [spec stores](./docs/spec-stores.md) for how to choose.
 
 ## Requirements
 
-- An agent that supports [Agent Skills](https://www.skills.sh).
-- The official [Azure DevOps MCP Server](https://learn.microsoft.com/azure/devops/mcp-server/mcp-server-overview) (`@azure-devops/mcp`) connected to it. Every artifact is a work item, so there is no offline mode.
+- An agent that supports [Agent Skills](https://www.skills.sh) or Claude Code plugins.
+- A connection to the [Azure DevOps MCP Server](https://learn.microsoft.com/azure/devops/mcp-server/mcp-server-overview). Every artifact is a work item, so there is no offline mode. Installing as a Claude Code plugin configures this for you.
 - A repository whose remote is an Azure DevOps repository.
 
 ## Install
+
+### Claude Code — as a plugin
+
+```
+/plugin marketplace add Gn0m0-dei/azdospec
+/plugin install azdo
+```
+
+This registers `/azdo:init`, `/azdo:propose`, `/azdo:apply` and `/azdo:archive`
+as real commands, and configures the Azure DevOps MCP server for you — it asks
+for your organization name on install and connects to the remote server, so
+there is no token to create or store.
+
+### opencode
+
+Copy `.opencode/command/` into your project or `~/.config/opencode/`, which
+registers `/azdo-init`, `/azdo-propose`, `/azdo-apply` and `/azdo-archive`. Then
+install the skill as below, and configure the Azure DevOps MCP server in your
+opencode config.
+
+### Any Agent Skills host
 
 ```bash
 npx skills add Gn0m0-dei/azdospec
 ```
 
 Or copy the skill folder (`skills/azdospec/`, the one containing `SKILL.md`)
-into the skills directory your agent reads:
+into the skills directory your agent reads — `~/.claude/skills/azdospec/`,
+`~/.config/opencode/skills/azdospec/`, `~/.pi/agent/skills/azdospec/`, or the
+project-local equivalent. Most agents also read `.agents/skills/`.
 
-**Claude Code**
-- Global: `~/.claude/skills/azdospec/`
-- Project: `<repo>/.claude/skills/azdospec/`
-
-**opencode**
-- Global: `~/.config/opencode/skills/azdospec/`
-- Project: `<repo>/.opencode/skills/azdospec/`
-- Also reads `.claude/skills/` and `.agents/skills/`, so a Claude Code install is picked up too.
-
-**pi**
-- Global: `~/.pi/agent/skills/azdospec/`
-- Project: `<repo>/.agents/skills/azdospec/` (or `<repo>/.pi/skills/…`)
-
-Any other Agent-Skills–compatible agent: drop the folder into its configured
-skills directory (most also read `.agents/skills/`).
+Installed this way there are no slash commands: ask for what you want and the
+skill activates by description. The MCP server has to be configured separately.
 
 ## Documentation
 
@@ -112,15 +122,25 @@ skills directory (most also read `.agents/skills/`).
 ## Layout
 
 ```
-skills/azdospec/
+skills/azdospec/          # the skill itself — portable to any Agent Skills host
 ├── SKILL.md              # model, commands, hard rules
 └── references/
     ├── work-items.md     # types, fields, links, delta tags
     ├── init.md · propose.md · apply.md · archive.md
+
+.claude-plugin/           # Claude Code plugin manifest and marketplace entry
+.mcp.json                 # the Azure DevOps MCP server the plugin configures
+commands/                 # /azdo:init · propose · apply · archive
+.opencode/command/        # the same commands for opencode
+.agents/                  # marketplace entry for agents-standard hosts
 ```
 
 `SKILL.md` is loaded whenever the skill activates; `references/` files are read
 on demand, so only the detail a command actually needs enters the context.
+
+The command files are deliberately thin — each one points at its procedure in
+`references/`. The behaviour lives in the skill and nowhere else, so the per-host
+packaging cannot drift away from it.
 
 ## Credits
 

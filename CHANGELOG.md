@@ -16,3 +16,5 @@ Installed copies are updated with `npx skills update azdospec`.
 - The spec store abstraction (`testplans`, `wiki`, `epic`, `none`), detected by `/azdo:init`, so the living specification lands wherever the organization is licensed to keep it.
 - `references/work-items.md`: work item type resolution per process, native field mapping, link type reference names, and the delta tag contract that `/azdo:archive` reads.
 - Documentation for people in `docs/`, separate from the agent-facing procedures.
+- Claude Code plugin packaging: `/azdo:init`, `/azdo:propose`, `/azdo:apply` and `/azdo:archive` exist as real commands rather than a documented convention, and installing the plugin configures the Azure DevOps MCP server — it asks for the organization name and connects to the remote server, so no token is created or stored.
+- The same four commands for opencode in `.opencode/command/`, and a marketplace entry for agents-standard hosts in `.agents/`.
