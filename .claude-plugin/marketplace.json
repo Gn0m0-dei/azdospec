@@ -1,17 +1,17 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "azdospec",
   "description": "Remote-first spec-driven development for Azure DevOps. Your backlog is the spec.",
+  "name": "azdospec",
   "owner": {
     "name": "Gn0m0-dei",
     "url": "https://github.com/Gn0m0-dei"
   },
   "plugins": [
     {
-      "name": "azdo",
+      "category": "productivity",
       "description": "Turns an idea into Azure Boards work items with Gherkin acceptance criteria, gates implementation on readiness, and merges the delivered change into a living specification.",
-      "source": "./",
-      "category": "productivity"
+      "name": "azdo",
+      "source": "./"
     }
   ]
 }

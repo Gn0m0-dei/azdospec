@@ -1,15 +1,11 @@
 {
-  "name": "azdo",
-  "displayName": "AzDOSpec",
-  "version": "0.1.0",
-  "description": "Remote-first spec-driven development for Azure DevOps. Proposals, requirements and tasks as work items, linked to branches, PRs and people.",
   "author": {
     "name": "Gn0m0-dei",
     "url": "https://github.com/Gn0m0-dei"
   },
+  "description": "Remote-first spec-driven development for Azure DevOps. Proposals, requirements and tasks as work items, linked to branches, PRs and people.",
+  "displayName": "AzDOSpec",
   "homepage": "https://github.com/Gn0m0-dei/azdospec",
-  "repository": "https://github.com/Gn0m0-dei/azdospec",
-  "license": "MIT",
   "keywords": [
     "azure-devops",
     "azure-boards",
@@ -17,11 +13,15 @@
     "sdd",
     "backlog"
   ],
+  "license": "MIT",
+  "name": "azdo",
+  "repository": "https://github.com/Gn0m0-dei/azdospec",
   "userConfig": {
     "organization": {
-      "type": "string",
+      "description": "The organization name alone, not the URL. For https://dev.azure.com/contoso, enter: contoso",
       "title": "Azure DevOps organization",
-      "description": "The organization name alone, not the URL. For https://dev.azure.com/contoso, enter: contoso"
+      "type": "string"
     }
-  }
+  },
+  "version": "0.1.0"
 }
