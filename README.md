@@ -5,10 +5,11 @@
 </p>
 
 <p align="center">
+  <a href="https://www.npmjs.com/package/azdospec"><img alt="npm" src="https://img.shields.io/npm/v/azdospec?style=flat-square&logo=npm&logoColor=white&color=cb3837" /></a>
   <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-blue?style=flat-square&logo=opensourceinitiative&logoColor=white" /></a>
   <a href="https://www.skills.sh"><img alt="Agent Skills" src="https://img.shields.io/badge/Agent_Skills-compatible-4b3baf?style=flat-square" /></a>
   <a href="#claude-code--as-a-plugin"><img alt="Claude Code: plugin" src="https://img.shields.io/badge/Claude_Code-plugin-d97757?style=flat-square&logo=claude&logoColor=white" /></a>
-  <a href="#opencode"><img alt="opencode: plugin, unpublished" src="https://img.shields.io/badge/opencode-plugin_(unpublished)-000000?style=flat-square&logo=opencode&logoColor=white" /></a>
+  <a href="#opencode"><img alt="opencode: plugin" src="https://img.shields.io/badge/opencode-plugin-000000?style=flat-square&logo=opencode&logoColor=white" /></a>
   <a href="#pi"><img alt="pi: package" src="https://img.shields.io/badge/pi-package-6e56cf?style=flat-square" /></a>
   <a href="https://learn.microsoft.com/azure/devops/mcp-server/mcp-server-overview"><img alt="Azure DevOps MCP" src="https://img.shields.io/badge/Azure_DevOps-MCP-0078D7?style=flat-square" /></a>
   <a href="./CHANGELOG.md"><img alt="Status" src="https://img.shields.io/badge/status-design_phase-orange?style=flat-square" /></a>
@@ -109,9 +110,12 @@ there is no token to create or store.
 ### pi
 
 ```bash
-pi install git:github.com/Gn0m0-dei/azdospec
+pi install npm:azdospec
 pi install npm:pi-mcp-adapter
 ```
+
+`git:github.com/Gn0m0-dei/azdospec` works too, if you would rather track the
+repository than the releases.
 
 The first command installs the skill and registers `/azdo-init`,
 `/azdo-propose`, `/azdo-apply` and `/azdo-archive`. The second is what gives pi
@@ -142,12 +146,8 @@ to create or store here either.
 
 ### opencode
 
-> **Not installable yet.** opencode loads plugins from npm or from a local
-> plugin directory, and this package is not published. The plugin below is
-> written and tested; it needs `npm publish` before anyone can use it.
-
-Once published, add it to `opencode.json` and it registers the four commands and
-the skill in one step:
+Add the plugin to `opencode.json` and it registers the four commands and the
+skill in one step — opencode installs it from npm itself:
 
 ```json
 {
@@ -192,7 +192,7 @@ agent documents it.
 |---|---|---|---|
 | Claude Code | `/plugin install azdo` | `/azdo:init`, `propose`, `apply`, `archive` | Configured on install; asks for the organization |
 | pi | `pi install git:…` plus `pi-mcp-adapter` | `/azdo-init`, `azdo-propose`, `azdo-apply`, `azdo-archive` | Through `pi-mcp-adapter` and a standard `.mcp.json` |
-| opencode | One line in `opencode.json`, once the package is on npm | The same four | Declared from `AZDO_ORGANIZATION`, or by you |
+| opencode | One line in `opencode.json` | The same four | Declared from `AZDO_ORGANIZATION`, or by you |
 | Any other Agent Skills host | `npx skills add …` | None; activates by description | Configured by you |
 
 ## Documentation

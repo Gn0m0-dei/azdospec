@@ -8,6 +8,12 @@ Installed copies are updated with `npx skills update azdospec`.
 
 ## [Unreleased]
 
+### Fixed
+
+- The readme shipped inside the package described opencode as not installable, which stopped being true the moment it was published.
+
+## [0.1.0] - 2026-09-11
+
 ### Added
 
 - The model: capabilities as Area Paths, a change as a Feature, requirements as backlog items of the project's Requirements category tagged `ADDED` / `MODIFIED` / `REMOVED`, tasks created only once the item reaches a sprint, and dependencies as `Predecessor / Successor` links.
