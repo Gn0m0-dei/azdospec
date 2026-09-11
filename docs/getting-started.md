@@ -30,7 +30,7 @@ On pi, the package installs the same four commands, and a second install gives
 pi the MCP connection it does not ship with:
 
 ```bash
-pi install git:github.com/Gn0m0-dei/azdospec
+pi install npm:azdospec
 pi install npm:pi-mcp-adapter
 ```
 
