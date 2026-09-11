@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires an Azure DevOps integration, normally the official @azure-devops/mcp MCP server. Every artifact is a work item, so there is no offline mode.
 metadata:
   author: Gn0m0-dei
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # AzDOSpec
