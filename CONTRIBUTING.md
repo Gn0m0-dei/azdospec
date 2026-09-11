@@ -33,10 +33,30 @@ policies, rollups, transitions — use it rather than reimplementing it.
 
 ## Testing a change
 
-There is no test suite. Test against a real Azure DevOps project you are allowed
-to write to, and say in the pull request which process it uses (Agile, Scrum,
-CMMI or Basic) and which spec store you exercised. Behaviour differs per process,
-and a change verified only on Scrum may break Basic, which has no Feature level.
+The host packaging is TypeScript and has tests. Run all three for anything under
+`commands/`, `extensions/`, `lib/` or `plugins/`:
+
+```bash
+pnpm install
+pnpm lint        # biome, also runs on staged files through husky
+pnpm typecheck   # tsc --noEmit; nothing is built, the hosts transpile
+pnpm test        # vitest
+```
+
+The tests cover how the command files parse and what the pi extension and the
+opencode plugin do with them.
+
+The skill itself has none, because its behaviour is a model following a
+procedure. Test it against a real Azure DevOps project you are allowed to write
+to, and say in the pull request which process it uses (Agile, Scrum, CMMI or
+Basic) and which spec store you exercised. Behaviour differs per process, and a
+change verified only on Scrum may break Basic, which has no Feature level.
+
+**One trap when working in this repository.** `.mcp.json` at the root belongs to
+the Claude Code plugin and uses `${user_config.organization}`, which only Claude
+Code resolves. Anything else that reads a project `.mcp.json` — pi through
+`pi-mcp-adapter`, for one — will take that string literally and fail to start the
+server. Point your own tooling at a config outside this repository.
 
 ## Style
 

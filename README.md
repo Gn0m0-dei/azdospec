@@ -106,18 +106,54 @@ as real commands, and configures the Azure DevOps MCP server for you — it asks
 for your organization name on install and connects to the remote server, so
 there is no token to create or store.
 
+### pi
+
+```bash
+pi install git:github.com/Gn0m0-dei/azdospec
+pi install npm:pi-mcp-adapter
+```
+
+The first command installs the skill and registers `/azdo-init`,
+`/azdo-propose`, `/azdo-apply` and `/azdo-archive`. The second is what gives pi
+an MCP connection at all — pi has no MCP of its own [by design](https://github.com/earendil-works/pi#no-mcp),
+and the adapter is how the ecosystem reaches it. AzDOSpec checks for it on every
+session and tells you the command to run if it is missing.
+
+The adapter reads the standard `.mcp.json`, in your project or at
+`~/.config/mcp/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "azure-devops": {
+      "command": "npx",
+      "args": ["-y", "@azure-devops/mcp", "<your-organization>", "-a", "azcli"]
+    }
+  }
+}
+```
+
+`-a azcli` authenticates through your existing `az login`, so there is no token
+to create or store here either.
+
 ### opencode
 
-Copy `.opencode/command/` into your project or `~/.config/opencode/`, which
-registers `/azdo-init`, `/azdo-propose`, `/azdo-apply` and `/azdo-archive`, and
-install the skill as below.
-
-opencode does not let an installed package write your configuration, so declare
-the MCP server yourself in `opencode.json`:
+Add the plugin to `opencode.json`, which registers the four commands and the
+skill in one step:
 
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
+  "plugin": ["azdospec"]
+}
+```
+
+Set `AZDO_ORGANIZATION` in your environment and the plugin declares the Azure
+DevOps MCP server for you. Without it, nothing is declared — a server pointing
+at an unknown organization fails on every call — and you configure it yourself:
+
+```json
+{
   "mcp": {
     "azure-devops": {
       "type": "remote",
@@ -127,7 +163,7 @@ the MCP server yourself in `opencode.json`:
 }
 ```
 
-That is the only manual step compared to the Claude Code plugin.
+The plugin never overwrites a command or a server you configured yourself.
 
 ### Any Agent Skills host
 
@@ -138,18 +174,18 @@ npx skills add Gn0m0-dei/azdospec
 Or copy the skill folder (`skills/azdospec/`, the one containing `SKILL.md`)
 into the skills directory your agent reads — `~/.claude/skills/azdospec/`,
 `~/.config/opencode/skills/azdospec/`, `~/.pi/agent/skills/azdospec/`, or the
-project-local equivalent. Most agents also read `.agents/skills/`.
+project-local equivalent.
 
 Installed this way there are no slash commands: ask for what you want and the
 skill activates by description, and the MCP server is configured however your
-agent documents it. On pi, `.agents/plugins/marketplace.json` in this repository
-is the install entry.
+agent documents it.
 
-| Host | Commands | MCP configured for you |
-|---|---|---|
-| Claude Code | `/azdo:init`, `propose`, `apply`, `archive` | Yes, on install |
-| opencode | `/azdo-init`, `azdo-propose`, `azdo-apply`, `azdo-archive` | No — three lines in `opencode.json` |
-| pi and other Agent Skills hosts | None; the skill activates by description | No |
+| Host | Install | Commands | MCP |
+|---|---|---|---|
+| Claude Code | `/plugin install azdo` | `/azdo:init`, `propose`, `apply`, `archive` | Configured on install; asks for the organization |
+| pi | `pi install git:…` plus the adapter | `/azdo-init`, `azdo-propose`, `azdo-apply`, `azdo-archive` | Through `pi-mcp-adapter` and a standard `.mcp.json` |
+| opencode | One line in `opencode.json` | The same four | Declared from `AZDO_ORGANIZATION`, or by you |
+| Any other Agent Skills host | `npx skills add …` | None; activates by description | Configured by you |
 
 ## Documentation
 
@@ -170,17 +206,25 @@ skills/azdospec/          # the skill itself — portable to any Agent Skills ho
 
 .claude-plugin/           # Claude Code plugin manifest and marketplace entry
 .mcp.json                 # the Azure DevOps MCP server the plugin configures
-commands/                 # /azdo:init · propose · apply · archive
-.opencode/command/        # the same commands for opencode
-.agents/                  # marketplace entry for agents-standard hosts
+commands/                 # /azdo:init · propose · apply · archive — read by all three hosts
+plugins/opencode.ts       # opencode plugin: registers them, plus the skill and the server
+extensions/               # pi extension: the same, plus the adapter check
+lib/                      # what the two of them share
+test/                     # pnpm test
 ```
 
 `SKILL.md` is loaded whenever the skill activates; `references/` files are read
 on demand, so only the detail a command actually needs enters the context.
 
 The command files are deliberately thin — each one points at its procedure in
-`references/`. The behaviour lives in the skill and nowhere else, so the per-host
-packaging cannot drift away from it.
+`references/`. The behaviour lives in the skill and nowhere else, and all three
+hosts read the same four command files rather than each keeping a copy, so a
+procedure is one edit and no host can drift away from another.
+
+Nothing ships in a host's local configuration directory: `.claude/`, `.opencode/`
+and `.agents/` are where *your* machine keeps its agent settings, so they are
+ignored here like in any other repository. Each host is pointed at the visible
+directories above through its own manifest instead.
 
 ## Credits
 
