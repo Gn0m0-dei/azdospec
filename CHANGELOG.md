@@ -6,6 +6,12 @@ All notable changes to this skill are documented here. The format follows
 
 Installed copies are updated with `npx skills update azdospec`.
 
+## [Unreleased]
+
+### Changed
+
+- A `MODIFIED` or `REMOVED` requirement now identifies what it supersedes by a `Related` link to the requirement that put the behaviour in the spec, and `/azdo:archive` resolves by that link before reading the prose. The prose stays required — it is what a reader sees during refinement, and it is what archive resolves by when there is no work item to link, as on a specification that predates azdospec. Where the two disagree, the link wins and archive reports the drift.
+
 ## [0.1.1] - 2026-09-11
 
 ### Fixed

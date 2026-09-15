@@ -108,9 +108,18 @@ with the spec:
 | `MODIFIED` | Behaviour that exists and changes | Replaces what the spec says |
 | `REMOVED` | Behaviour that goes away | Retired from the spec |
 
-A `MODIFIED` or `REMOVED` requirement must name what it supersedes — the
-scenario or requirement as the spec states it today — or archive cannot apply
-it.
+A `MODIFIED` or `REMOVED` requirement must identify what it supersedes, or
+archive cannot apply it. It carries both of these whenever it can:
+
+- **The link** — a `Related` link, typed as the table above spells it, to the
+  Done requirement that put the behaviour in the spec. This is the identity:
+  archive resolves by it first, and it survives every rewording of the spec.
+- **The prose** — the scenario or requirement as the spec states it today.
+  Always present: it is what a reader sees during refinement, and it is what
+  archive resolves by when there is no work item to link. A spec written before
+  azdospec, or imported from a wiki, has nothing to link to.
+
+Where the two disagree, the link wins and archive reports the drift.
 
 ## Idempotency
 
