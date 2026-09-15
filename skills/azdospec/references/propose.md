@@ -36,7 +36,9 @@ guesses is the worst possible outcome: it reads as settled and is wrong.
 ## 3. Shape the tree
 
 Decide the delta for each requirement — `ADDED`, `MODIFIED` or `REMOVED` — and
-what each `MODIFIED` or `REMOVED` supersedes in the current spec.
+what each `MODIFIED` or `REMOVED` supersedes in the current spec. Search the
+project for the Done requirement that put that behaviour there and link it;
+where none exists, name it in prose alone.
 
 Then pick the shape:
 

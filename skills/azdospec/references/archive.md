@@ -21,9 +21,15 @@ For each requirement, read its delta tag and update the spec store accordingly.
 | `MODIFIED` | Replace what it supersedes, in place |
 | `REMOVED` | Retire what it names |
 
-A `MODIFIED` or `REMOVED` requirement that does not name what it supersedes
-cannot be applied. Ask rather than guess: a spec that quietly accumulates two
+Resolve what a `MODIFIED` or `REMOVED` supersedes by its link first, and by its
+prose only when it carries no link. One that identifies neither cannot be
+applied. Ask rather than guess: a spec that quietly accumulates two
 contradictory versions of the same behaviour is worse than no spec.
+
+The link names the requirement; with the `wiki` and `epic` stores it does not
+name the passage. Use the prose to find the passage and the link to be sure it
+is the right one. Where the prose no longer matches what the spec says, apply by
+the link and report the drift.
 
 ### Per store
 
