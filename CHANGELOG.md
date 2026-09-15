@@ -6,7 +6,7 @@ All notable changes to this skill are documented here. The format follows
 
 Installed copies are updated with `npx skills update azdospec`.
 
-## [Unreleased]
+## [0.2.0] - 2026-09-15
 
 ### Changed
 
