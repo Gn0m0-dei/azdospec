@@ -11,7 +11,7 @@
   <a href="#claude-code--as-a-plugin"><img alt="Claude Code: plugin" src="https://img.shields.io/badge/Claude_Code-plugin-d97757?style=flat-square&logo=claude&logoColor=white" /></a>
   <a href="#opencode"><img alt="opencode: plugin" src="https://img.shields.io/badge/opencode-plugin-000000?style=flat-square&logo=opencode&logoColor=white" /></a>
   <a href="#pi"><img alt="pi: package" src="https://img.shields.io/badge/pi-package-6e56cf?style=flat-square" /></a>
-  <a href="https://learn.microsoft.com/azure/devops/mcp-server/mcp-server-overview"><img alt="Azure DevOps MCP" src="https://img.shields.io/badge/Azure_DevOps-MCP-0078D7?style=flat-square" /></a>
+  <a href="https://learn.microsoft.com/azure/devops/cli/"><img alt="Azure CLI" src="https://img.shields.io/badge/Azure_DevOps-CLI-0078D7?style=flat-square" /></a>
   <a href="./CHANGELOG.md"><img alt="Status" src="https://img.shields.io/badge/status-design_phase-orange?style=flat-square" /></a>
   <a href="https://github.com/Gn0m0-dei/azdospec/stargazers"><img alt="Stars" src="https://img.shields.io/github/stars/Gn0m0-dei/azdospec?style=flat-square&label=Stars" /></a>
 </p>
@@ -57,10 +57,10 @@ backlog is a list of work, and an item that never closes distorts every board,
 rollup and forecast it appears on. The reasoning behind this and the other
 non-obvious choices is in [how it maps](./docs/how-it-maps.md).
 
-Traceability is native throughout — parent/child hierarchy, `AB#<id>` in commits
-and pull requests, branch links, pull request completion transitioning the linked
-work items, and a branch policy that refuses a pull request with no work item
-attached.
+Traceability is native throughout — parent/child hierarchy, `AB#<id>` in commits,
+pull requests linked to the items they deliver, pull request completion
+transitioning those items, and a branch policy that refuses a pull request with
+no work item attached.
 
 ## Commands
 
@@ -68,7 +68,7 @@ attached.
 |---|---|
 | `/azdo:init` | Once per repository. Resolves organization and project from the git remote, detects the available spec store, configures the branch policy and writes `.azdospec.json`. |
 | `/azdo:propose <idea>` | Reads the current spec, drafts the whole change — Feature, one requirement per delta, task checklist — shows it as a single draft, and creates and links everything once you approve. |
-| `/azdo:apply` | Refuses unless a product owner approved the requirement and it has an iteration. Creates the tasks, derives parallel streams from the dependency links, creates the branch from the work item and posts progress as comments. |
+| `/azdo:apply` | Refuses unless a product owner approved the requirement and it has an iteration. Creates the tasks, derives parallel streams from the dependency links, pushes a branch named for the work item, opens the pull request and posts progress as comments. |
 | `/azdo:archive` | Verifies the tasks are Done, folds the deltas into the spec store and closes the change. |
 
 Full detail in [commands](./docs/commands.md).
@@ -90,7 +90,16 @@ See [spec stores](./docs/spec-stores.md) for how to choose.
 ## Requirements
 
 - An agent that supports [Agent Skills](https://www.skills.sh) or Claude Code plugins.
-- A connection to the [Azure DevOps MCP Server](https://learn.microsoft.com/azure/devops/mcp-server/mcp-server-overview). Every artifact is a work item, so there is no offline mode. Installing as a Claude Code plugin configures this for you.
+- The [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) with the `azure-devops` extension, signed in:
+
+  ```bash
+  az extension add --name azure-devops
+  az login
+  ```
+
+  That sign-in is the identity for everything AzDOSpec does. There is no token
+  to create or store, and no server to configure. Every artifact is a work item,
+  so there is no offline mode.
 - A repository whose remote is an Azure DevOps repository.
 
 ## Install
@@ -103,46 +112,17 @@ See [spec stores](./docs/spec-stores.md) for how to choose.
 ```
 
 This registers `/azdo:init`, `/azdo:propose`, `/azdo:apply` and `/azdo:archive`
-as real commands, and configures the Azure DevOps MCP server for you — it asks
-for your organization name on install and connects to the remote server, so
-there is no token to create or store.
+as real commands.
 
 ### pi
 
 ```bash
 pi install npm:azdospec
-pi install npm:pi-mcp-adapter
 ```
 
 `git:github.com/Gn0m0-dei/azdospec` works too, if you would rather track the
-repository than the releases.
-
-The first command installs the skill and registers `/azdo-init`,
-`/azdo-propose`, `/azdo-apply` and `/azdo-archive`. The second is what gives pi
-an MCP connection at all — pi has no MCP of its own [by design](https://github.com/earendil-works/pi#no-mcp),
-and the adapter is how the ecosystem reaches it.
-
-You can skip the second command: if no MCP package is installed, AzDOSpec offers
-to install it the first time you start a session, and remembers a no. What it
-checks for is MCP support, not that one package, so if you already reach MCP
-another way it stays quiet.
-
-The adapter reads the standard `.mcp.json`, in your project or at
-`~/.config/mcp/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "azure-devops": {
-      "command": "npx",
-      "args": ["-y", "@azure-devops/mcp", "<your-organization>", "-a", "azcli"]
-    }
-  }
-}
-```
-
-`-a azcli` authenticates through your existing `az login`, so there is no token
-to create or store here either.
+repository than the releases. It installs the skill and registers `/azdo-init`,
+`/azdo-propose`, `/azdo-apply` and `/azdo-archive`.
 
 ### opencode
 
@@ -156,22 +136,7 @@ skill in one step — opencode installs it from npm itself:
 }
 ```
 
-Set `AZDO_ORGANIZATION` in your environment and the plugin declares the Azure
-DevOps MCP server for you. Without it, nothing is declared — a server pointing
-at an unknown organization fails on every call — and you configure it yourself:
-
-```json
-{
-  "mcp": {
-    "azure-devops": {
-      "type": "remote",
-      "url": "https://mcp.dev.azure.com/<your-organization>"
-    }
-  }
-}
-```
-
-The plugin never overwrites a command or a server you configured yourself.
+The plugin never overwrites a command you configured yourself.
 
 ### Any Agent Skills host
 
@@ -185,15 +150,17 @@ into the skills directory your agent reads — `~/.claude/skills/azdospec/`,
 project-local equivalent.
 
 Installed this way there are no slash commands: ask for what you want and the
-skill activates by description, and the MCP server is configured however your
-agent documents it.
+skill activates by description.
 
-| Host | Install | Commands | MCP |
-|---|---|---|---|
-| Claude Code | `/plugin install azdo` | `/azdo:init`, `propose`, `apply`, `archive` | Configured on install; asks for the organization |
-| pi | `pi install git:…` plus `pi-mcp-adapter` | `/azdo-init`, `azdo-propose`, `azdo-apply`, `azdo-archive` | Through `pi-mcp-adapter` and a standard `.mcp.json` |
-| opencode | One line in `opencode.json` | The same four | Declared from `AZDO_ORGANIZATION`, or by you |
-| Any other Agent Skills host | `npx skills add …` | None; activates by description | Configured by you |
+| Host | Install | Commands |
+|---|---|---|
+| Claude Code | `/plugin install azdo` | `/azdo:init`, `propose`, `apply`, `archive` |
+| pi | `pi install npm:azdospec` | `/azdo-init`, `azdo-propose`, `azdo-apply`, `azdo-archive` |
+| opencode | One line in `opencode.json` | The same four |
+| Any other Agent Skills host | `npx skills add …` | None; activates by description |
+
+Whatever the host, the Azure CLI is the connection: the same `az login` on every
+one of them, and nothing per host to configure.
 
 ## Documentation
 
@@ -209,14 +176,13 @@ agent documents it.
 skills/azdospec/          # the skill itself — portable to any Agent Skills host
 ├── SKILL.md              # model, commands, hard rules
 └── references/
-    ├── work-items.md     # types, fields, links, delta tags
+    ├── work-items.md     # types, fields, links, delta tags, and the CLI commands for them
     ├── init.md · propose.md · apply.md · archive.md
 
 .claude-plugin/           # Claude Code plugin manifest and marketplace entry
-.mcp.json                 # the Azure DevOps MCP server the plugin configures
 commands/                 # /azdo:init · propose · apply · archive — read by all three hosts
-plugins/opencode.ts       # opencode plugin: registers them, plus the skill and the server
-extensions/               # pi extension: the same, plus the adapter check
+plugins/opencode.ts       # opencode plugin: registers them, plus the skill
+extensions/               # pi extension: registers them
 lib/                      # what the two of them share
 test/                     # pnpm test
 ```

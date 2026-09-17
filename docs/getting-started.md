@@ -5,45 +5,42 @@
 You need three things:
 
 1. An agent that supports [Agent Skills](https://www.skills.sh) or Claude Code plugins — Claude Code, opencode, pi, and others.
-2. A connection to the [Azure DevOps MCP Server](https://learn.microsoft.com/azure/devops/mcp-server/mcp-server-overview), as an identity that can create work items in your project.
+2. The [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) with the `azure-devops` extension, signed in as an identity that can create work items in your project:
+
+   ```bash
+   az extension add --name azure-devops
+   az login
+   ```
+
 3. A repository whose remote is an Azure DevOps repository.
 
 Everything AzDOSpec produces is a work item, so there is no offline or draft-only
-mode. If the integration is missing, the skill says so and stops.
+mode. If the CLI is missing or signed out, the skill says so and stops. There is
+no token to create: `az login` is the identity.
 
 ## Install
 
-On Claude Code, install it as a plugin and the second requirement is handled for
-you:
+On Claude Code, install it as a plugin:
 
 ```
 /plugin marketplace add Gn0m0-dei/azdospec
 /plugin install azdo
 ```
 
-You are asked for your Azure DevOps organization name on install — the
-organization alone, not the URL. The plugin connects to the remote MCP server
-using your existing Azure identity, so there is no token to create, paste or
-rotate.
-
-On pi, the package installs the same four commands, and a second install gives
-pi the MCP connection it does not ship with:
+On pi, one install gives you the same four commands:
 
 ```bash
 pi install npm:azdospec
-pi install npm:pi-mcp-adapter
 ```
 
-On any other Agent Skills host, install the skill and configure the MCP server
-yourself. There are no commands then — describe what you want and the skill
-activates by itself:
+On any other Agent Skills host, install the skill. There are no commands then —
+describe what you want and the skill activates by itself:
 
 ```bash
 npx skills add Gn0m0-dei/azdospec
 ```
 
-The [README](../README.md#install) has the detail per host, including what
-opencode still needs.
+The [README](../README.md#install) has the detail per host, including opencode.
 
 This guide writes the commands as Claude Code spells them, `/azdo:init`. On pi
 and opencode there is no plugin namespace, so the same command is `/azdo-init`.

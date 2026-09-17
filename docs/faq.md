@@ -27,23 +27,26 @@ No. It is the best spec store and the one `/azdo:init` prefers when it detects
 the licence, but `wiki` works with plain Basic access and is the default
 otherwise. See [spec stores](./spec-stores.md).
 
-### Why does pi need a second package?
+### Why the Azure CLI and not the Azure DevOps MCP server?
 
-Because pi ships no MCP support at all, deliberately: its authors argue you are
-usually better served by a CLI tool with a README. That is a defensible position
-and it is not one AzDOSpec can work around, since every artifact it produces is
-a write to Azure DevOps.
+Three reasons, in order of weight.
 
-`pi-mcp-adapter` is how the pi ecosystem reaches MCP servers, and it reads the
-same standard `.mcp.json` every other host uses. It also happens to be cheaper
-than a native integration: it exposes one proxy tool instead of the forty-odd
-definitions the Azure DevOps server would otherwise put in your context.
+Every host behaves the same. pi ships no MCP at all, by design, and opencode and
+Claude Code each configure servers their own way; a CLI on the path is the same
+on all of them, so there is one procedure and nothing per host to install,
+declare or adapt.
 
-AzDOSpec checks at the start of every session and offers to install it, which
-you can decline once and never be asked again. The check looks for any MCP
-package you have declared, not for that one, so reaching MCP another way is
-fine. In non-interactive runs there is nowhere to ask, so it only says what is
-missing.
+The agent controls what comes back. `--query` returns the two fields a step
+needs instead of a sixty-field work item, which is most of what a session spends
+its context on. An MCP server returns what it decides to return.
+
+Nothing is stored. `az login` is the identity, the same one you already use;
+there is no PAT to create, paste or rotate, and `az rest` signs its calls with it
+too.
+
+The cost is a dependency you install once: the Azure CLI and its `azure-devops`
+extension. Test Plans has no command group, so those calls go through `az rest`
+against the REST API — same identity, same shell.
 
 ### What happens if someone edits a work item by hand?
 
@@ -64,11 +67,12 @@ Teams that do not run sprints can point the default iteration at the project roo
 and the gate reduces to "someone approved it". Kanban teams typically do exactly
 that.
 
-### Does it work on TFS or Azure DevOps Server?
+### Does it work on Azure DevOps Server?
 
-It depends on the MCP server's support rather than on anything here. The model —
-Area Paths, Requirements category, hierarchy and dependency links — exists in all
-supported versions.
+The `azure-devops` extension supports on-premises collections when `--org` is
+the collection URL. The model — Area Paths, Requirements category, hierarchy and
+dependency links — exists in all supported versions. It has not been exercised
+there; if you do, say so in an issue.
 
 ### Can two people work on the same change at once?
 

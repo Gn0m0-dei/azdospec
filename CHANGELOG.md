@@ -6,6 +6,22 @@ All notable changes to this skill are documented here. The format follows
 
 Installed copies are updated with `npx skills update azdospec`.
 
+## [Unreleased]
+
+### Changed
+
+- AzDOSpec reaches Azure DevOps through the Azure CLI — `az boards`, `az repos`, `az devops wiki`, and `az rest` for what the `azure-devops` extension has no command group for — instead of the Azure DevOps MCP server. One requirement on every host: the CLI with the extension, signed in with `az login`. The identity is that sign-in; there is still no token to create or store, and now there is no server to configure either.
+- Every procedure names the command it runs and asks for the fields it needs with `--query`, so a step reads two values rather than a whole work item.
+- `/azdo:init` checks that the CLI is installed and signed in before anything else, and reads Area Paths and creates the spec test plan through the CLI.
+- `/azdo:apply` no longer creates the branch from the work item; the pull request, created with `az repos pr create --work-items … --transition-work-items true`, links the requirement and its tasks and closes them on completion.
+- The `Related` link type is `System.LinkTypes.Related`; the reference used to spell it `System.LinkTypes.Related-Forward`, which does not exist.
+
+### Removed
+
+- The pi session check for `pi-mcp-adapter`, and the offer to install it: pi needs nothing beyond the package now.
+- The opencode plugin's `AZDO_ORGANIZATION` variable and the MCP server it declared.
+- The Claude Code plugin's organization prompt on install, and the `.mcp.json` it resolved into.
+
 ## [0.2.0] - 2026-09-15
 
 ### Changed

@@ -12,16 +12,13 @@ export interface ConfigWithSkills extends Config {
 export interface OpencodeSetup {
   commands: AzdoCommand[];
   skillsDirectory: string;
-  organization?: string;
 }
 
-const SERVER_NAME = 'azure-devops';
-
-// Everything already present is left alone: the user's own commands, skill
-// paths and servers outrank anything this package would contribute.
+// Everything already present is left alone: the user's own commands and skill
+// paths outrank anything this package would contribute.
 export const configureOpencode = (
   config: ConfigWithSkills,
-  { commands, skillsDirectory, organization }: OpencodeSetup,
+  { commands, skillsDirectory }: OpencodeSetup,
 ): ConfigWithSkills => {
   config.command ??= {};
   for (const { name, description, template } of commands) {
@@ -32,17 +29,6 @@ export const configureOpencode = (
   config.skills.paths ??= [];
   if (!config.skills.paths.includes(skillsDirectory)) {
     config.skills.paths.push(skillsDirectory);
-  }
-
-  // Declared only when the organization is known: a server pointing at an
-  // unresolved organization fails on every call, which is worse than absent.
-  config.mcp ??= {};
-  if (organization && !config.mcp[SERVER_NAME]) {
-    config.mcp[SERVER_NAME] = {
-      type: 'remote',
-      url: `https://mcp.dev.azure.com/${organization}`,
-      enabled: true,
-    };
   }
 
   return config;

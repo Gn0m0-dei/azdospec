@@ -2,7 +2,7 @@
 name: azdospec
 description: Remote-first spec-driven development on Azure DevOps. Turns an idea into a Feature with requirements, Gherkin acceptance criteria and tasks as native Azure Boards work items, gates implementation on readiness, links branches and pull requests, and merges the accepted deltas into a living specification. Use for /azdo:init, /azdo:propose, /azdo:apply and /azdo:archive.
 license: MIT
-compatibility: Requires an Azure DevOps integration, normally the official @azure-devops/mcp MCP server. Every artifact is a work item, so there is no offline mode.
+compatibility: Requires the Azure CLI with the azure-devops extension, signed in with `az login`. Every artifact is a work item, so there is no offline mode.
 metadata:
   author: Gn0m0-dei
   version: "0.2.0"
@@ -50,6 +50,26 @@ read them all.
 
 Without `.azdospec.json` the only command that can run is `/azdo:init`. Say so
 rather than guessing the destination.
+
+## Reaching Azure DevOps
+
+Everything goes through the Azure CLI. Before the first call of a session:
+
+```bash
+az account show --query user.name -o tsv
+az extension show --name azure-devops --query version -o tsv
+```
+
+If either fails, stop and give the user the fix — `az login`, or
+`az extension add --name azure-devops` — rather than working around it. There is
+no token to ask for: `az login` is the identity, and this skill never requests,
+echoes or stores a credential.
+
+Pass `--org https://dev.azure.com/<organization>` and `--project <project>` from
+`.azdospec.json` on every call. Never change the user's defaults with
+`az devops configure`. On every read, ask for the fields you need with `--query`
+and `-o tsv`: a whole work item is sixty fields, and you usually want two.
+`work-items.md` has the commands.
 
 ## Hard rules
 

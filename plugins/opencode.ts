@@ -14,7 +14,6 @@ export const AzdoSpecPlugin: Plugin = async () => {
   const setup = {
     commands: readCommands(),
     skillsDirectory: join(packageRoot, 'skills'),
-    organization: process.env.AZDO_ORGANIZATION,
   };
 
   return {
