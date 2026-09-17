@@ -16,12 +16,5 @@
   "license": "MIT",
   "name": "azdo",
   "repository": "https://github.com/Gn0m0-dei/azdospec",
-  "userConfig": {
-    "organization": {
-      "description": "The organization name alone, not the URL. For https://dev.azure.com/contoso, enter: contoso",
-      "title": "Azure DevOps organization",
-      "type": "string"
-    }
-  },
   "version": "0.2.0"
 }

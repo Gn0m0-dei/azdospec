@@ -68,8 +68,8 @@ in.
 Everything below is Azure DevOps doing the work. AzDOSpec only arranges it:
 
 - Parent/child hierarchy between Epic, Feature, requirement and Task.
-- `AB#<id>` in a commit or pull request, linking code to the item.
-- Branch links created from a work item.
+- `AB#<id>` in a commit, linking code to the item.
+- The pull request linked to the requirement and its tasks.
 - Pull request completion transitioning linked work items.
 - The `work-item-linking` branch policy refusing an unlinked pull request.
 - `Tests / Tested By` between a test case and its requirement.

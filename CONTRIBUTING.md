@@ -52,11 +52,11 @@ to, and say in the pull request which process it uses (Agile, Scrum, CMMI or
 Basic) and which spec store you exercised. Behaviour differs per process, and a
 change verified only on Scrum may break Basic, which has no Feature level.
 
-**One trap when working in this repository.** `.mcp.json` at the root belongs to
-the Claude Code plugin and uses `${user_config.organization}`, which only Claude
-Code resolves. Anything else that reads a project `.mcp.json` — pi through
-`pi-mcp-adapter`, for one — will take that string literally and fail to start the
-server. Point your own tooling at a config outside this repository.
+**Verify every command against the CLI before writing it down.** A flag that
+does not exist fails loudly; a field or link type that does not exist fails
+quietly, and the agent moves on. `az boards work-item relation list-type` lists
+the link names, and the Azure DevOps REST reference has the field names. Say in
+the pull request which commands you ran for real.
 
 ## Style
 
