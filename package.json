@@ -1,6 +1,6 @@
 {
   "name": "azdospec",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Remote-first spec-driven development for Azure DevOps. Proposals, requirements and tasks as work items, linked to branches, PRs and people.",
   "type": "module",
   "main": "./plugins/opencode.ts",

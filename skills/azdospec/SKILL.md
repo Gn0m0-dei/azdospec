@@ -5,7 +5,7 @@ license: MIT
 compatibility: Requires the Azure CLI with the azure-devops extension, signed in with `az login`. Every artifact is a work item, so there is no offline mode.
 metadata:
   author: Gn0m0-dei
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # AzDOSpec
