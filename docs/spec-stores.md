@@ -10,7 +10,7 @@ has, and a tool that assumed it would be unusable for most teams.
 
 ## `testplans`
 
-**Needs:** Basic + Test Plans, for the identity the integration runs as.
+**Needs:** Basic + Test Plans, for the identity signed in with `az login`.
 
 Each scenario becomes a Test Case: `Design` while proposed, `Ready` once
 archived, `Closed` when removed. Test cases are grouped in a suite per Area Path

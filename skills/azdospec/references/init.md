@@ -5,6 +5,16 @@ which the other three commands read.
 
 ---
 
+## 0. Check the tooling
+
+```bash
+az account show --query user.name -o tsv
+az extension show --name azure-devops --query version -o tsv
+```
+
+If the first fails, the user runs `az login`; if the second, `az extension add
+--name azure-devops`. Say which and stop — nothing below works without both.
+
 ## 1. Resolve the destination
 
 Derive organization, project and repository from the remote:
@@ -29,14 +39,26 @@ The Area Path under which this repository's capabilities live. Read the project'
 area paths and propose the one matching the repository name; confirm with the
 user, and offer the project root when nothing matches.
 
+```bash
+az boards area project list --depth 2 --query "children[].path" -o tsv
+```
+
 Capabilities become children of this root. They are created on demand by
 `propose`, never up front.
 
 ## 3. Detect the spec store
 
-Try to create the spec test plan. A permission error means Test Plans is not
-licensed for the identity the integration runs as, which is common and not a
-problem.
+Try to create the spec test plan, with `az rest` as `work-items.md` sets it up:
+
+```bash
+printf '{"name": "%s"}' "<repository> — specification" > plan.json
+az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method post \
+  --url "$ORG/$PROJECT/_apis/testplan/plans?api-version=7.1" --body @plan.json \
+  --query '{id: id, root: rootSuite.id}' -o tsv
+```
+
+A `403` means Test Plans is not licensed for the signed-in user, which is common
+and not a problem. Any other error is a real one: report it.
 
 | Result | Default | Also offer |
 |---|---|---|
@@ -56,22 +78,18 @@ The `work-item-linking` policy refuses a pull request with no work item attached
 Without it the chain from requirement to merged code has a gap, and nothing else
 in AzDOSpec can close it.
 
-The MCP server does not expose branch policies, so use the CLI:
-
 ```bash
+az repos show --repository <repository> --query id -o tsv
 az repos policy work-item-linking create \
-  --blocking true \
+  --blocking true --enabled true \
   --branch main \
-  --enabled true \
-  --repository-id <repository-id> \
-  --org https://dev.azure.com/<organization> \
-  --project <project>
+  --repository-id <repository-id>
 ```
 
-If the Azure CLI is unavailable or the user lacks permission, say so and point at
-the policy in project settings rather than continuing silently. This step is
-optional in the sense that the rest still works; it is the only part of the
-traceability chain that a human can bypass.
+If the user lacks permission, say so and point at the policy in project settings
+rather than continuing silently. This step is optional in the sense that the
+rest still works; it is the only part of the traceability chain that a human can
+bypass.
 
 ## 5. Write the configuration
 

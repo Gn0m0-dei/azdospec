@@ -18,9 +18,8 @@ in the wrong one are tedious to undo. Proposes the Area Path your capabilities
 will live under. Detects the spec store by trying to write a test plan. Configures
 the `work-item-linking` branch policy. Writes `.azdospec.json`.
 
-The branch policy needs the Azure CLI, because the MCP server does not expose
-branch policies. If it is unavailable, init says so and points you at project
-settings rather than pretending it succeeded.
+If you lack permission to set the branch policy, init says so and points you at
+project settings rather than pretending it succeeded.
 
 ## `/azdo:propose <idea>`
 
@@ -48,11 +47,11 @@ assigned to an iteration, and it tells you which condition is missing. An item
 nobody prioritised and nobody scheduled is not ready to be built.
 
 When it is ready: creates the tasks, links the ones that must run in order,
-derives the independent streams from those links, creates the branch from the
+derives the independent streams from those links, pushes a branch named for the
 work item, implements, and posts progress comments at milestones — not a
 transcript.
 
-The pull request references `AB#<id>` and transitions the linked work items when
+The pull request links the requirement and its tasks and transitions them when
 it completes, so merging closes the tasks.
 
 ## `/azdo:archive`
