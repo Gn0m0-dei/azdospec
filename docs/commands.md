@@ -10,16 +10,27 @@ but no commands, describe the phase instead and the skill picks it up.
 
 ## `/azdo:init`
 
-Runs once per repository.
+Runs once per clone.
 
 Derives organization, project and repository from `git remote get-url origin` and
-asks you to confirm — an organization holds many projects, and work items created
+asks you to confirm, or to name the organization and project of the backlog when
+it lives elsewhere — an organization holds many projects, and work items created
 in the wrong one are tedious to undo. Proposes the Area Path your capabilities
-will live under. Detects the spec store by trying to write a test plan. Configures
-the `work-item-linking` branch policy. Writes `.azdospec.json`.
+will live under. Detects the spec store by finding or creating a test plan.
+Configures the `work-item-linking` branch policy unless the branch already has
+it. Writes the `azdospec.*` keys to the clone's local git config; nothing goes
+into the repository.
 
 If you lack permission to set the branch policy, init says so and points you at
 project settings rather than pretending it succeeded.
+
+When the repository lives in another organization than the backlog, init sets no
+policy — no work item from the backlog could satisfy it — and checks instead that
+the Azure CLI reaches the repository. If it does not, it asks you to run
+`az devops login` for that organization yourself.
+
+An `.azdospec.json` from an earlier version is migrated, and deleted if you say
+so.
 
 ## `/azdo:propose <idea>`
 
@@ -53,6 +64,10 @@ transcript.
 
 The pull request links the requirement and its tasks and transitions them when
 it completes, so merging closes the tasks.
+
+When the repository lives in another organization than the backlog, nothing can
+be linked: the branch, the commits and the pull request carry `EXT-<id>`, and the
+tasks are closed by hand once the pull request merges.
 
 ## `/azdo:archive`
 

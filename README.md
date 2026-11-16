@@ -62,11 +62,16 @@ pull requests linked to the items they deliver, pull request completion
 transitioning those items, and a branch policy that refuses a pull request with
 no work item attached.
 
+The repository and the backlog can also live in different organizations — the
+code in a client's, the backlog in your own. Links cannot cross organizations, so
+the repository then carries only `EXT-<id>`, with nothing that points at the
+backlog. See the [FAQ](./docs/faq.md#can-the-repository-and-the-backlog-live-in-different-organizations).
+
 ## Commands
 
 | Command | What it does |
 |---|---|
-| `/azdo:init` | Once per repository. Resolves organization and project from the git remote, detects the available spec store, configures the branch policy and writes `.azdospec.json`. |
+| `/azdo:init` | Once per clone. Resolves organization and project from the git remote, detects the available spec store, configures the branch policy and writes the clone's local git config — nothing in the repository. |
 | `/azdo:propose <idea>` | Reads the current spec, drafts the whole change — Feature, one requirement per delta, task checklist — shows it as a single draft, and creates and links everything once you approve. |
 | `/azdo:apply` | Refuses unless a product owner approved the requirement and it has an iteration. Creates the tasks, derives parallel streams from the dependency links, pushes a branch named for the work item, opens the pull request and posts progress as comments. |
 | `/azdo:archive` | Verifies the tasks are Done, folds the deltas into the spec store and closes the change. |
@@ -100,7 +105,9 @@ See [spec stores](./docs/spec-stores.md) for how to choose.
   That sign-in is the identity for everything AzDOSpec does. There is no token
   to create or store, and no server to configure. Every artifact is a work item,
   so there is no offline mode.
-- A repository whose remote is an Azure DevOps repository.
+- A git repository. When its remote is in another Azure DevOps organization
+  than the backlog and your sign-in cannot reach it, `az devops login` there
+  with a personal access token.
 
 ## Install
 

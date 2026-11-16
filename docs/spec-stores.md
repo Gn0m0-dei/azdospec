@@ -63,6 +63,7 @@ workflow out, or for a team that keeps its specs somewhere else entirely.
 
 ## Changing your mind
 
-Edit `spec_store` in `.azdospec.json`. Nothing migrates automatically — what is
-already in the old store stays there. Moving a capability's spec by hand is a
+Set it in each clone's git config — `git config --local azdospec.spec-store wiki`
+— or run `/azdo:init` again. Nothing migrates automatically — what is already in
+the old store stays there. Moving a capability's spec by hand is a
 one-off job and usually worth doing before the next `/azdo:archive`.

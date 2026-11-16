@@ -90,12 +90,12 @@ the suite for that Area Path and link each requirement `Tested By` its cases:
 ```bash
 printf '[{"workItem": {"id": %s}}]' <case-id> > cases.json
 az rest --resource 499b84ac-1321-427f-aa17-267ca6975798 --method post \
-  --url "$ORG/$PROJECT/_apis/testplan/Plans/<test_plan_id>/Suites/<suite-id>/TestCase?api-version=7.1" \
+  --url "$ORG/$PROJECT/_apis/testplan/Plans/<test-plan-id>/Suites/<suite-id>/TestCase?api-version=7.1" \
   --body @cases.json
 ```
 
 A capability with no suite yet gets one, a `staticTestSuite` named for the Area
-Path under the plan's root suite, by posting to `testplan/Plans/<test_plan_id>/suites`.
+Path under the plan's root suite, by posting to `testplan/Plans/<test-plan-id>/suites`.
 They stay in `Design` until archive accepts them.
 
 ## 6. Report

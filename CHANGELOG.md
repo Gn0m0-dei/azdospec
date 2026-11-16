@@ -6,6 +6,20 @@ All notable changes to this skill are documented here. The format follows
 
 Installed copies are updated with `npx skills update azdospec`.
 
+## [Unreleased]
+
+### Added
+
+- The repository and the backlog can live in different organizations, such as a client's repository and a consultancy's backlog. AzDOSpec detects it by comparing the remote's organization with the configured one. Links between code and work items cannot cross organizations, so the repository then carries the id as `EXT-<id>` — branch `feature/EXT-<id>-<slug>`, commit footer `Refs: EXT-<id>`, pull request title `EXT-<id> <slug>` — and nothing that points at the backlog: no `#<id>`, which Azure Repos would link to the repository organization's own item with that id, and no backlog URL. `/azdo:init` skips the branch policy there, which no work item from the backlog could satisfy, and checks that the CLI reaches the repository, asking the user to `az devops login` with a personal access token when it does not. `/azdo:apply` opens the pull request without linking work items and says the tasks are closed by hand.
+
+### Changed
+
+- The configuration lives in the clone's local git config, under `azdospec.organization`, `azdospec.project`, `azdospec.area-root`, `azdospec.spec-store` and `azdospec.test-plan-id`, instead of a committed `.azdospec.json`. Nothing AzDOSpec needs is written into the repository. Every clone runs `/azdo:init` once; it reuses the spec test plan and the branch policy an earlier run created, and prints the `git config` lines a teammate can paste instead.
+- `/azdo:init` migrates an existing `.azdospec.json` and offers to delete it.
+- The repository's organization, project and name are read from the remote on every run. SSH host aliases, URL-encoded project names and `visualstudio.com` remotes are recognised. `az repos` calls name the repository's organization and project explicitly, so a repository in another project of the same organization works too.
+- `/azdo:apply` reuses a branch that already carries the work item id.
+- `/azdo:archive` finds the merged pull request by its exact source branch, and asks when it cannot find one. It used to match any branch containing `AB<id>`, so `AB12` also matched `AB123`.
+
 ## [0.3.0] - 2026-09-17
 
 ### Changed
