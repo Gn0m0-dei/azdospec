@@ -74,3 +74,7 @@ Everything below is Azure DevOps doing the work. AzDOSpec only arranges it:
 - The `work-item-linking` branch policy refusing an unlinked pull request.
 - `Tests / Tested By` between a test case and its requirement.
 - Comment threads with `@mentions` for handoff between people and agents.
+
+The links between code and items exist inside one organization only. When the
+repository lives in another one, the commit, pull request and policy lines above
+do not apply: the repository carries `EXT-<id>` and the tasks are closed by hand.

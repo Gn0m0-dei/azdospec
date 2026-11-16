@@ -16,9 +16,19 @@ az boards query --wiql "SELECT [System.Id], [System.State] FROM WorkItemLinks
   WHERE [Source].[System.Id] = <id>
     AND [System.Links.LinkType] = 'System.LinkTypes.Hierarchy-Forward'
   MODE (MustContain)" --query "[].[id, fields.\"System.State\"]" -o tsv
-az repos pr list --repository <repository> --status completed \
-  --query "[?contains(sourceRefName, 'AB<id>')].pullRequestId" -o tsv
 ```
+
+The pull request is found by its branch, not by its links, so the check is the
+same in split organizations. Find the branch as `apply.md` does, then:
+
+```bash
+az repos pr list --org $REPO_ORG --project $REPO_PROJECT --repository <repository> \
+  --source-branch <branch> --status completed --query "[].pullRequestId" -o tsv
+```
+
+When there is no branch or no completed pull request — the branch was deleted
+with no local copy, or the remote is not on Azure DevOps — ask the user whether
+it merged rather than assuming either way.
 
 ## 2. Apply the deltas
 

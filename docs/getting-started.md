@@ -12,7 +12,8 @@ You need three things:
    az login
    ```
 
-3. A repository whose remote is an Azure DevOps repository.
+3. A git repository. Its remote can be in the backlog's organization, in another
+   Azure DevOps organization — a client's, say — or on another host.
 
 Everything AzDOSpec produces is a work item, so there is no offline or draft-only
 mode. If the CLI is missing or signed out, the skill says so and stops. There is
@@ -51,14 +52,25 @@ and opencode there is no plugin namespace, so the same command is `/azdo-init`.
 /azdo:init
 ```
 
-This runs once. It derives your organization and project from the git remote and
-asks you to confirm them, proposes the Area Path your capabilities will live
-under, detects which spec store your organization can use, configures the branch
-policy that requires a work item on every pull request, and writes
-`.azdospec.json`.
+This runs once per clone. It derives your organization and project from the git
+remote and asks you to confirm them, proposes the Area Path your capabilities
+will live under, detects which spec store your organization can use, configures
+the branch policy that requires a work item on every pull request, and writes the
+clone's local git config.
 
-Commit that file. It records where the work items live — nothing about any
-individual change, which is what makes the approach remote-first.
+Nothing is written into the repository. The configuration lives in `.git/config`,
+shared by every worktree of the clone and never committed. It records where the
+work items live — nothing about any individual change, which is what makes the
+approach remote-first.
+
+The flip side is that every clone runs `/azdo:init` once: yours on another
+machine, and each teammate's. Init reuses the test plan and the branch policy an
+earlier run created, and its report gives the `git config` lines a teammate can
+paste instead.
+
+If your backlog lives in another organization than the repository, say so when
+init asks. The [FAQ](./faq.md#can-the-repository-and-the-backlog-live-in-different-organizations)
+explains what changes.
 
 ## Your first change
 
@@ -87,7 +99,7 @@ what they would do for any other backlog item.
 
 The agent refuses if the item is not ready and tells you which condition is
 missing. Otherwise it creates the tasks, works out what can run in parallel,
-creates the branch from the work item, implements, posts progress as comments,
+pushes a branch named for the work item, implements, posts progress as comments,
 and opens a pull request that closes the tasks when it merges.
 
 ## Closing the loop

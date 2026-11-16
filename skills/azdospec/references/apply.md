@@ -54,24 +54,47 @@ git worktree add ../<repository>-<stream> -b <branch>/<stream>
 
 ## 4. Create the branch
 
-Name it for the item and push it:
+Reuse a branch that already carries the id, local or on `origin` — a teammate or
+another tool may have started it, as `feature/` or `fix/`:
 
+```bash
+git fetch origin
+git branch --all --list '*/AB<id>-*' '*/EXT-<id>-*'
 ```
-feature/AB<id>-<slug>
-```
+
+A branch listed as `remotes/origin/<branch>` is `<branch>` everywhere below.
+Otherwise name it for the item and push it:
+
+| Organizations | Branch |
+|---|---|
+| Same | `feature/AB<id>-<slug>` |
+| Split | `feature/EXT-<id>-<slug>` |
 
 The link from branch to item is made by the commits and the pull request below,
-not by the branch itself.
+not by the branch itself. In split organizations there is no link at all.
 
 ## 5. Implement
 
-Reference the work item in every commit so the chain survives:
+Reference the work item in every commit so the chain survives. In the same
+organization:
 
 ```
 <type>: <summary>
 
 AB#<id>
 ```
+
+In split organizations:
+
+```
+<type>: <summary>
+
+Refs: EXT-<id>
+```
+
+`Refs:`, not `Closes:` — nothing in the repository's organization can close an
+item in the backlog's. And no `#` anywhere in the message, for the reason
+`SKILL.md` gives.
 
 Post a progress comment on the requirement at each milestone — a stream
 finished, a decision taken, a blocker hit — with
@@ -95,9 +118,11 @@ milestones, not a transcript.
 
 ## 6. Open the pull request
 
+In the same organization:
+
 ```bash
-az repos pr create --repository <repository> \
-  --source-branch feature/AB<id>-<slug> --target-branch main \
+az repos pr create --org $REPO_ORG --project $REPO_PROJECT --repository <repository> \
+  --source-branch <branch> --target-branch main \
   --title "<title>" --description "AB#<id>" "<what it does>" \
   --work-items <id> <task ids…> --transition-work-items true \
   --query "{id: pullRequestId, url: url}" -o tsv
@@ -107,7 +132,25 @@ az repos pr create --repository <repository> \
 is what makes merging close the tasks rather than leaving someone to tick them
 by hand.
 
+In split organizations:
+
+```bash
+az repos pr create --org $REPO_ORG --project $REPO_PROJECT --repository <repository> \
+  --source-branch <branch> --target-branch main \
+  --title "EXT-<id> <slug>" --description "EXT-<id>" "<what it does>" \
+  --query "{id: pullRequestId, url: url}" -o tsv
+```
+
+No `--work-items`: the ids belong to another organization, and the repository's
+organization would read them as its own items. No backlog URL in the description either.
+
+With a remote outside Azure DevOps, push the branch and ask the user to open the
+pull request on their host, titled `EXT-<id> <slug>`.
+
 ## 7. Report
 
 Give the pull request URL, which tasks it closes, and what remains before
 `/azdo:archive` — every task Done, and the pull request merged.
+
+In split organizations the pull request closes nothing. Say so, and that the
+tasks are moved to Done by hand in the backlog once it merges.

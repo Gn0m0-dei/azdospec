@@ -2,9 +2,9 @@
 
 Read this before creating or updating anything in Azure Boards.
 
-Throughout, `$ORG` is `https://dev.azure.com/<organization>` and `$PROJECT` the
-project, both from `.azdospec.json`. Every command takes `--org $ORG`, and every
-command that accepts it takes `--project $PROJECT`; they are left out below.
+Throughout, `$ORG` and `$PROJECT` are the backlog's, from the configuration
+`SKILL.md` describes. Every command takes `--org $ORG`, and every command that
+accepts it takes `--project $PROJECT`; they are left out below.
 
 ---
 
@@ -60,7 +60,7 @@ line.
 | Feature | The change itself, when it has more than one requirement | Epic, if any |
 | Requirement-category item | One per delta | The Feature, when there is one |
 | Task | One per checklist entry, created at apply time only | Its requirement |
-| Test Case | One per scenario, only when `spec_store` is `testplans` | Linked, not parented |
+| Test Case | One per scenario, only when `azdospec.spec-store` is `testplans` | Linked, not parented |
 
 ## Fields
 
